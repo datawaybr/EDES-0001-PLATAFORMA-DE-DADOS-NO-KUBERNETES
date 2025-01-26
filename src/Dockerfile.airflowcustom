@@ -1,0 +1,20 @@
+# Use uma versão específica do Airflow 
+FROM apache/airflow:2.7.1
+
+# Copia as libs externas para o container
+COPY utils/airflow/requirements_airflow.txt /
+COPY utils/airflow/airflow_local_settings.py /home/airflow/.local/lib/python3.8/site-packages/airflow/config_templates/airflow_local_settings.py
+
+# Instale pacotes necessários e dependências Python
+USER root
+RUN apt-get update
+
+RUN apt-get install -y --no-install-recommends \
+        python3-dev \
+        build-essential \
+        python3-pip 
+
+RUN rm -rf /var/lib/apt/lists/* 
+
+USER airflow
+RUN pip install --no-cache-dir -r /requirements_airflow.txt

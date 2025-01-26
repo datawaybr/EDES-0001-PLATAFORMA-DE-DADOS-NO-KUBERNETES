@@ -1,0 +1,46 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: spark-alerts
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  groups:
+    - name: spark-alerts
+      rules:
+        - alert: HighDriverMemoryUsage
+          expr: spark_driver_jvm_heap_used_bytes / spark_driver_jvm_heap_max_bytes > 0.8
+          for: 2m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High memory usage in Spark Driver"
+            description: "Driver memory usage is above 80% for more than 2 minutes."
+
+        - alert: ExecutorFailed
+          expr: spark_executor_failed_tasks > 0
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Spark Executor Failure"
+            description: "One or more executors have failed tasks."
+
+        - alert: DriverFailed
+          expr: spark_driver_failed_tasks > 0
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Spark Driver Failure"
+            description: "The Spark Driver has failed tasks."
+
+        - alert: HighExecutorMemoryUsage
+          expr: spark_executor_memory_used / spark_executor_memory_max > 0.9
+          for: 2m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High memory usage in Spark Executor"
+            description: "Executor memory usage is above 90% for more than 2 minutes."

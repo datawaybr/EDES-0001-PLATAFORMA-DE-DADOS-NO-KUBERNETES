@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: spark-operator-datawaybr
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'git@github.com:seu-git/nome-repo.git'
+    path: helm-charts/spark-operator
+    targetRevision: main
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: operator
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

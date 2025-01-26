@@ -1,0 +1,45 @@
+# Escolha uma imagem base oficial do Spark com suporte ao Hadoop e Python
+FROM bitnami/spark:3.4.1
+
+# Defina as variáveis de ambiente necessárias
+ENV DELTA_CORE_VERSION=2.4.0 \
+    JAVA_HOME=/opt/bitnami/java \
+    PATH=$PATH:/opt/bitnami/java/bin
+
+# Demarcar o user root como user padrao
+USER root
+
+# Instale dependencias de sistema e Python
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3-pip \
+    python3-dev \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Instale bibliotecas Python necessárias
+RUN pip3 install --no-cache-dir delta-spark==${DELTA_CORE_VERSION}
+
+#============== Sessao de arquivos de apoio para o Prometheus Operator
+# Adicionar jmx java agent file para as metricas do exporter
+# Configura as permissões do arquivo no container
+COPY jars/prometheus-spark/jmx_prometheus_javaagent-0.11.0.jar /opt/spark/jars/
+RUN chmod 644 /opt/spark/jars/jmx_prometheus_javaagent-0.11.0.jar
+
+# Cria a pasta no container que vai receber os arquivos de configuracao
+# Copia as metricas + as regras para a pasta criada
+RUN mkdir -p /etc/metrics/conf
+COPY spark-manifests/metrics.properties /etc/metrics/conf
+COPY spark-manifests/prometheus.yaml /etc/metrics/conf
+#==============
+
+# Copie os scripts para o contêiner
+WORKDIR /opt/spark/work-dir/
+COPY notebooks/delta.py .
+COPY notebooks/generate_stage_data.py .
+COPY notebooks/generate_raw_data.py .
+COPY notebooks/generate_silver_data.py .
+
+# Altere permissões (necessário para execução com usuários não root)
+RUN chmod -R 775 /opt/spark/work-dir
+
+# Usuário padrão para execução
+USER 1001

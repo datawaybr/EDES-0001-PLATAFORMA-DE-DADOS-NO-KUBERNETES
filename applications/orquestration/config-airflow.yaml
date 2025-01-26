@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: airflow-datawaybr
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'git@github.com:seu-git/nome-repo.git'
+    path: helm-charts/airflow
+    targetRevision: main
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: orquestrator
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

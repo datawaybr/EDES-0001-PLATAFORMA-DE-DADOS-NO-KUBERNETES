@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: minio-metrics
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: minio
+      v1.min.io/tenant: dlkdataway
+  namespaceSelector:
+    matchNames:
+      - storage
+  endpoints:
+  - port: http-minio
+    path: /minio/v2/metrics/cluster
+    interval: 15s
+    scrapeTimeout: 10s

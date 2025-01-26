@@ -1,0 +1,37 @@
+FROM jupyter/pyspark-notebook:spark-3.4.1
+# Metadados do imagem criada
+LABEL project="Plataforma de Dados no Kubernetes" \
+    mainteiners="DataWay BR" \
+    version="1.0" \
+    description="Jupyter Notebook com PySpark + Delta e Azure" \
+    data.creation="2024-11-10"
+
+ARG DELTA_CORE_VERSION="2.4.0"
+RUN pip install --quiet --no-cache-dir delta-spark==${DELTA_CORE_VERSION} && \
+    fix-permissions "${HOME}" && \
+    fix-permissions "${CONDA_DIR}"
+
+USER root
+
+# Copia as libs
+COPY /utils/jupyterhub/requirements_jupyterhub.txt /home/jovyan/
+
+# Copia os jars de conexão ABFSS para a pasta do Spark
+COPY /jars/azure/*.jar /usr/local/spark-3.4.1-bin-hadoop3.2/jars/
+
+# Vai para a pasta
+WORKDIR /home/jovyan/
+
+# Atualiza as dependencias do pip e instala o pyspark
+RUN pip install --quiet --no-cache-dir -r requirements_jupyterhub.txt
+RUN echo 'spark.sql.extensions io.delta.sql.DeltaSparkSessionExtension' >> "${SPARK_HOME}/conf/spark-defaults.conf" && \
+    echo 'spark.sql.catalog.spark_catalog org.apache.spark.sql.delta.catalog.DeltaCatalog' >> "${SPARK_HOME}/conf/spark-defaults.conf"
+
+# Teste de build do spark com o container
+USER ${NB_UID}
+
+RUN echo "from pyspark.sql import SparkSession" > /tmp/init-delta.py && \
+    echo "from delta import *" >> /tmp/init-delta.py && \
+    echo "spark = configure_spark_with_delta_pip(SparkSession.builder).getOrCreate()" >> /tmp/init-delta.py && \
+    python /tmp/init-delta.py && \
+    rm /tmp/init-delta.py

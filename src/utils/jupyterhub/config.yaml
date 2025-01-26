@@ -1,0 +1,38 @@
+singleuser:
+ image:
+  # You should replace the "latest" tag with a fixed version from:
+  # https://hub.docker.com/r/jupyter/datascience-notebook/tags/
+  # Inspect the Dockerfile at:
+  # https://github.com/jupyter/docker-stacks/tree/HEAD/datascience-notebook/Dockerfile
+  name: <repo/nome-imagem>
+  tag: v01
+ # `cmd: null` allows the custom CMD of the Jupyter docker-stacks to be used
+ # which performs further customization on startup.
+ cmd: null
+ # storage: capacity define a quantidade maxima de disco que será utilizada por cada usuário
+ storage:
+  capacity: 2Gi
+# Sessão para todo o hub do Jupyter
+hub:
+ config:
+  Authenticator:
+   admin_users:
+    - <admin-user>
+   allowed_users:
+    - <nick-git>
+  GitHubOAuthenticator:
+   client_id: <client_id>
+   client_secret: <client_secret>
+   oauth_callback_url: http://localhost/hub/oauth_callback
+   #client_id:
+   #  valueFrom:
+   #    secretKeyRef:
+   #      name: github-client  # Nome da secret
+   #      key: client_id       # Chave da secret
+   #client_secret:
+   #  valueFrom:
+   #    secretKeyRef:
+   #      name: github-client  # Nome da secret
+   #      key: client_secret   # Chave da secret
+  JupyterHub:
+   authenticator_class: github

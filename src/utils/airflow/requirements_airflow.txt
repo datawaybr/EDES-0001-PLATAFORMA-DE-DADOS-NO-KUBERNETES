@@ -1,0 +1,7 @@
+#apache-airflow-providers-microsoft-azure==8.5.1
+#apache-airflow-providers-microsoft-azure[google]
+
+apache-airflow-providers-microsoft-azure==4.3.0
+apache-airflow-providers-airbyte==3.6.0
+apache-airflow-providers-airbyte[http]
+apache-airflow[azure]

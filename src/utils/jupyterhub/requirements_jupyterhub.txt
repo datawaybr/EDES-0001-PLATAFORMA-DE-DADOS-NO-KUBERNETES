@@ -1,0 +1,6 @@
+azure-identity==1.5.0
+azure-keyvault-secrets==4.3.0
+azure-storage-blob==12.6.0
+azure-storage-file-datalake==12.2.0
+azure-mgmt-datafactory==3.1.0
+azure-mgmt-resource==23.0.1

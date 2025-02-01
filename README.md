@@ -7,17 +7,17 @@ Através do Kubernetes é possível gerenciar aplicações e processos de maneir
 Apesar do Kubernetes ter seu dia a dia mais nas grandes nuvens (Azure, Aws e Google). É possível ter um cluster pra chamar de seu na sua própria máquina.
 
 Neste projeto vamos fazer passo a passo:
-- Configurar e iniciar um cluster de nó único no Minikube
-- Configurar uma aplicação que irá gerenciar as nossas aplicações sozinha
-- Configurar um "Mini" DataLake
-- Configurar um ambiente de Desenvolvimento pronto com PySpark integrado
-- Configurar um operador que gerencia as aplicações spark
-- Configurar um ambiente de monitoramento com métricas e dashboards
-- Configurar uma ferramenta que calcula os custos do ambiente
-- Configurar uma ferramenta de orquestração dos processos executados
+- Configurar e iniciar um cluster de nó único no Minikube;
+- Configurar uma aplicação que irá gerenciar as nossas aplicações sozinha;
+- Configurar o MinIO;
+- Configurar um ambiente de Desenvolvimento pronto com PySpark integrado;
+- Configurar um operador que gerencia as aplicações spark;
+- Configurar um ambiente de monitoramento com métricas e dashboards;
+- Configurar uma ferramenta que calcula os custos do ambiente;
+- Configurar uma ferramenta de orquestração dos processos executados.
 
 ## Escopo
-![Alt text](/docs/images/Introducao_Arquitetura.png "a title")
+![Alt text](/docs/fluxogramas/Introducao_Arquitetura.png "Introdução a Arquitetura")
 
 ## Pré-Requisitos
 Computador Utilizado: Windows 11 + WSL
@@ -40,7 +40,7 @@ Computador Utilizado: Windows 11 + WSL
 - KubeCost
 
 ## Documentações
-- [Link das Documentações em Imagem](docs/images/)
+- [Link das Documentações em Fluxograma](docs/fluxogramas/)
 - [Link das Documentações Escritas](docs/pdfs-modulos/)
 
 ## Observações
@@ -51,4 +51,4 @@ Computador Utilizado: Windows 11 + WSL
     - ServiceMonitor
     - PodMonitor
     - SparkOperator com CDR's de PodMonitor
-- Tomar cuidado com a versão do cluster Kubernetes, pois pode dar conflito durante a utilização do Spark Operator mais recente e do Prometheus Operator
+- Para abrir os arquivos .excalidraw é necessário baixar a extensão do Excalidraw no VSCode. Ao exportar os fluxos para imagem algumas caixinhas acabem quebrando os links.
